@@ -1,6 +1,6 @@
 # A hard fork from BitaCoin
 
-# What are the most important Items in this fork?
+## What are the most important Items in this fork?
 
 * Decentralized Network
 * RSA Wallet
@@ -9,7 +9,9 @@
 * Transaction Expiration
 * Fix Double Spend Problem
 
-# Sample config file:
+## If you want to see a scenario check [this medium post](https://medium.com/@amirhossein2000/lets-run-a-coin-base-blockchain-that-is-written-by-golang-e9743d54a58) that has been written by me.
+
+## Sample config file:
 
 ```json
 {
@@ -28,7 +30,7 @@ Host | The address for serving web handlers
 InitialNodes | Other nodes addresses
 PubKeyPath | Public_key of miner wallet that gets the reward coins after mine a new block
 
-# Commands:
+## Commands:
 
 ### Generate key pair of a wallet:
 
@@ -54,4 +56,4 @@ PubKeyPath | Public_key of miner wallet that gets the reward coins after mine a 
 ./bitacoin download -config <config file>
 ````
 
-Use this client for get wallet balance and create new transaction :  [bitacoin_client](https://github.com/Amirhossein2000/bitacoin_client "bitacoin_client")
+## You should use the [bitacoin_client](https://github.com/Amirhossein2000/bitacoin_client "bitacoin_client") to get wallet balance and transfer coins.
