@@ -1,2 +1,5 @@
 *.cp
 cmd/bc/bc
+/github.com/fzerorubigd/bitacoin
+/.idea/
+/github.com/fzerorubigd/bitacoin.exe

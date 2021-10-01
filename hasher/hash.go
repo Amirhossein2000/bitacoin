@@ -1,6 +1,7 @@
-package bitacoin
+package hasher
 
 import (
+	"context"
 	"crypto/sha256"
 	"fmt"
 )
@@ -30,7 +31,7 @@ func GoodEnough(mask []byte, hash []byte) bool {
 	return true
 }
 
-// EasyHash craete hash, the easy way, just a simple sha256 hash
+// EasyHash create hash, the easy way, just a simple sha256 hash
 func EasyHash(data ...interface{}) []byte {
 	hasher := sha256.New()
 
@@ -41,16 +42,21 @@ func EasyHash(data ...interface{}) []byte {
 
 // DifficultHash creates the hash with difficulty mask and conditions,
 // return the hash and the nonce used to create the hash
-func DifficultHash(mask []byte, data ...interface{}) ([]byte, int32) {
+func DifficultHash(ctx context.Context, mask []byte, data ...interface{}) ([]byte, uint64) {
 	ln := len(data)
 	data = append(data, nil)
-	var i int32
+	var i uint64
 	for {
-		data[ln] = i
-		hash := EasyHash(data...)
-		if GoodEnough(mask, hash) {
-			return hash, i
+		select {
+		case <-ctx.Done():
+			return nil, 0
+		default:
+			data[ln] = i
+			hash := EasyHash(data...)
+			if GoodEnough(mask, hash) {
+				return hash, i
+			}
+			i++
 		}
-		i++
 	}
 }

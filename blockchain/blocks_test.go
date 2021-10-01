@@ -1,17 +1,21 @@
-package bitacoin
+package blockchain
 
 import (
+	"context"
 	"encoding/hex"
+	"github.com/fzerorubigd/bitacoin/block"
+	"github.com/fzerorubigd/bitacoin/hasher"
+	"github.com/fzerorubigd/bitacoin/transaction"
 	"strings"
 	"testing"
 )
 
 func TestBlockCreation(t *testing.T) {
-	data := []*Transaction{NewCoinBaseTxn([]byte("bita"), nil)}
-	mask := GenerateMask(2)
-	prev := EasyHash("Prev hash")
+	data := []*transaction.Transaction{transaction.NewRewardTxn([]byte("bita"))}
+	mask := hasher.GenerateMask(2)
+	prev := hasher.EasyHash("Prev hash")
 
-	b := NewBlock(data, mask, prev)
+	b := block.StartMining(context.Background(), data, mask, prev)
 	if err := b.Validate(mask); err != nil {
 		t.Errorf("Validation failed: %q", err)
 		return
@@ -21,7 +25,7 @@ func TestBlockCreation(t *testing.T) {
 		t.Errorf("The prev hash is not in string")
 	}
 
-	mask2 := GenerateMask(8)
+	mask2 := hasher.GenerateMask(8)
 	if err := b.Validate(mask2); err == nil {
 		t.Errorf("Block should be invalid with mask %x, but is not", mask2)
 	}
@@ -33,20 +37,20 @@ func TestBlockCreation(t *testing.T) {
 	}
 	b.Nonce--
 
-	b.Transactions = []*Transaction{NewCoinBaseTxn([]byte("forud"), nil)}
+	b.Transactions = []*transaction.Transaction{transaction.NewRewardTxn([]byte("forud"))}
 	if err := b.Validate(mask); err == nil {
 		t.Errorf("Block should be invalid, but is not")
 	}
 	b.Transactions = data
 
-	b.PrevHash = EasyHash("Something else")
+	b.PrevHash = hasher.EasyHash("Something else")
 	if err := b.Validate(mask); err == nil {
 		t.Errorf("Block should be invalid, but is not")
 	}
 	b.PrevHash = prev
 
 	hash := b.Hash
-	b.Hash, _ = DifficultHash(mask, "Something else")
+	b.Hash, _ = hasher.DifficultHash(context.Background(), mask, "Something else")
 	if err := b.Validate(mask); err == nil {
 		t.Errorf("Block should be invalid, but is not")
 	}

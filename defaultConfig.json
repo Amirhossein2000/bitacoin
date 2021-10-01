@@ -1,0 +1,5 @@
+{
+  "Host": "127.0.0.1:8080",
+  "InitialNodes": [],
+  "PubKeyPath": "./miner_wallet/public_key.txt"
+}
